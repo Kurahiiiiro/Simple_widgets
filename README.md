@@ -39,5 +39,11 @@ brew install jq
    API_KEY="your_api_key_here"
    ```
 
+#### Troubleshooting
+If the Weather widget shows "Location not found" or other errors, it may be due to macOS location services being temporarily unresponsive after a reboot.
+- **Toggle Location Services**: Go to `System Settings > Privacy & Security > Location Services`, turn it **OFF**, and then turn it back **ON**.
+- **Enable Wi-Fi**: macOS requires Wi-Fi to be enabled for location services, even if you are using Ethernet.
+*Note: This widget includes an automatic fallback that uses your IP address to estimate your location if high-accuracy data is unavailable.*
+
 ## Customization
 You can easily customize the appearance of any widget by editing its `.coffee` or `.jsx` file. The styles are written in standard CSS/Stylus syntax inside the files.
