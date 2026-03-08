@@ -1,0 +1,24 @@
+.weather-widget {
+  position: fixed;
+  top: 200px;
+  right: 20px;
+  font-family: "Helvetica Neue", sans-serif;
+  color: white;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.weather-widget .day {
+  margin-bottom: 10px;
+}
+
+.weather-widget .weather {
+  display: flex;
+  align-items: center;
+}
+
+.weather-widget img {
+  height: 48px;
+  margin-right: 10px;
+}
