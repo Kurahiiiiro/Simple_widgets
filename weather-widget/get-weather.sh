@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # APIキー設定
-API_KEY="a55e14b710006b0a219f003b63d976e2"  # OWM API Key
+API_KEY="your_api_key_here"  # OWM API Key
 
 # ツールのパスを探索する関数（UbersichtはユーザーのPATHを引き継がないため明示的に探す）
 find_tool() {
