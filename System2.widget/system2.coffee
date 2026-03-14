@@ -3,15 +3,15 @@
 # $(df -h / | awk 'NR==2{print $5 " (" $3 "/" $2 ")"}'):::DATA:::\ は使わなくなったディスク情報
 
 command: """
-  echo "$(sw_vers -productVersion):::DATA:::\
-$(system_profiler SPHardwareDataType | grep "Model Name:" | awk -F': ' '{print $2}'):::DATA:::\
-$(sysctl -n hw.model):::DATA:::\
-$(sysctl -n machdep.cpu.brand_string):::DATA:::\
-$(echo "$(($(sysctl -n hw.memsize) / 1024 / 1024 / 1024)) GB"):::DATA:::\
-$(diskutil info / | awk -F': +' '/Total Space/ {print $2}' | cut -d' ' -f1,2):::DATA:::\
-$(diskutil info / | awk -F': +' '/Free Space/ {print $2}' | cut -d' ' -f1,2):::DATA:::\
+  echo "$(sw_vers -productVersion 2>/dev/null):::DATA:::\
+$(system_profiler SPHardwareDataType 2>/dev/null | grep 'Model Name:' | awk -F': ' '{print $2}'):::DATA:::\
+$(sysctl -n hw.model 2>/dev/null):::DATA:::\
+$(sysctl -n machdep.cpu.brand_string 2>/dev/null):::DATA:::\
+$(echo "$(($(sysctl -n hw.memsize 2>/dev/null) / 1024 / 1024 / 1024)) GB"):::DATA:::\
+$(diskutil info / 2>/dev/null | awk -F': +' '/Total Space/ {print $2}' | cut -d' ' -f1,2):::DATA:::\
+$(diskutil info / 2>/dev/null | awk -F': +' '/Free Space/ {print $2}' | cut -d' ' -f1,2):::DATA:::\
 $(ipconfig getifaddr en0 || ipconfig getifaddr en1 || echo "N/A"):::DATA:::\
-$(pmset -g batt | awk '/InternalBattery/ {gsub(";",""); print $3 "(" $4 ")"; exit} END{if(NR==0)print "N/A"}'):::DATA:::\
+$(pmset -g batt | grep "InternalBattery" | awk '{gsub(";",""); print $3 "(" $4 ")"} END {if (NR == 0) print "N/A"}'):::DATA:::\
 $(top -l 1 | awk '/CPU usage:/ {print $3 " User, " $5 " System, " $7 " Idle"; exit}')"
 """
 
@@ -24,13 +24,13 @@ DELIMITER: ":::DATA:::"
 
 # ウィジェットのHTMLとデータのレンダリング
 render: (output) ->
-  parts = output.trim().split(@DELIMITER)
+  parts = output.trim().split(@DELIMITER).map (p) -> p.trim()
 
-  # 期待通り9つのパーツが取得できたか確認
+  # 期待通り10つのパーツが取得できたか確認
   if parts.length == 10
     os_version      = parts[0]
-    model_name      = parts[1] # Macのモデル名 (例: MacBook Pro)
-    model_id        = parts[2] # モデル識別子 (例: MacBookPro18,1)
+    model_name      = parts[1]
+    model_id        = parts[2]
     processor       = parts[3]
     ram             = parts[4]
     disk_total      = parts[5]
@@ -41,16 +41,15 @@ render: (output) ->
 
     """
     <div class="system-info-widget">
-      <p class="label">System</p>
-      <p><span class="label">OS Version:</span> #{os_version}</p>
-      <p><span class="label">Model Name:</span> #{model_name}</p>
-      <p><span class="label">Model Identifier:</span> #{model_id}</p>
-      <p><span class="label">Processor:</span> #{processor}</p>
-      <p><span class="label">RAM:</span> #{ram}</p>
-      <p><span class="label">Macintosh HD:</span> #{disk_free} Free / #{disk_total} Total</p>
-      <p><span class="label">IP Address:</span> #{local_ip}</p>
-      <p><span class="label">Battery:</span> #{battery}</p>
-      <p><span class="label">CPU Usage:</span> #{cpu_usage}</p>
+      <div class="header">System Overview</div>
+      <div class="info-row"><span class="label">OS Version:</span><span class="value">#{os_version}</span></div>
+      <div class="info-row"><span class="label">Model:</span><span class="value">#{model_name} (#{model_id})</span></div>
+      <div class="info-row"><span class="label">Processor:</span><span class="value">#{processor}</span></div>
+      <div class="info-row"><span class="label">RAM:</span><span class="value">#{ram}</span></div>
+      <div class="info-row"><span class="label">Storage:</span><span class="value">#{disk_free} Free / #{disk_total}</span></div>
+      <div class="info-row"><span class="label">IP Address:</span><span class="value">#{local_ip}</span></div>
+      <div class="info-row"><span class="label">Battery:</span><span class="value">#{battery}</span></div>
+      <div class="info-row"><span class="label">CPU Usage:</span><span class="value">#{cpu_usage}</span></div>
     </div>
     """
   else
@@ -58,35 +57,52 @@ render: (output) ->
     """
     <div class="system-info-widget error">
       <p>Error fetching system data.</p>
-      <p>Received: #{parts.length} parts (expected 9). Output: "#{output.trim()}"</p>
+      <p>Received: #{parts.length} parts (expected 10). Output: "#{output.trim()}"</p>
     </div>
     """
 
 # ウィジェットのスタイル (CSS)
 style: """
-  // 右上に配置する例
   top: 20px
   left: 20px
-  // 基本的なスタイル
   color: #fff
-  font-family: "Helvetica Neue", sans-serif
-  font-size: 14px
-  background-color: rgba(0, 0, 0, 0.3) // 半透明の背景
-  padding: 10px
-  border-radius: 8px
-  width: 400px // ウィジェットの幅を少し広げることも検討
+  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif
+  font-size: 13px
+  background-color: rgba(0, 0, 0, 0.4)
+  padding: 15px
+  border-radius: 12px
+  width: 380px
+  box-sizing: border-box
+  backdrop-filter: blur(10px)
+  border: 1px solid rgba(255, 255, 255, 0.1)
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5)
 
-  .system-info-widget p
-    margin: 4px 0
-    line-height: 1.4
-    font-weight: 200
-    word-wrap: break-word // プロセッサ名などが長い場合に対応
+  .system-info-widget .header
+    font-size: 11px
+    text-transform: uppercase
+    letter-spacing: 1px
+    margin-bottom: 12px
+    color: rgba(255, 255, 255, 0.5)
+    font-weight: 500
+
+  .system-info-widget .info-row
+    display: flex
+    justify-content: space-between
+    margin-bottom: 6px
+    align-items: baseline
 
   .system-info-widget .label
+    color: rgba(255, 255, 255, 0.7)
+    font-weight: 500
+    flex-shrink: 0
+    margin-right: 10px
+
+  .system-info-widget .value
+    text-align: right
     font-weight: 300
-    min-width: 110px // ラベルの最小幅を調整 (Model Identifier のため)
-    display: inline-block
+    word-break: break-all
 
   .system-info-widget.error
-    color: #ff6666 // エラー時の文字色
+    color: #ff6666
+    background-color: rgba(50, 0, 0, 0.6)
 """

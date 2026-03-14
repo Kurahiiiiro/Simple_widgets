@@ -15,7 +15,7 @@ style: """
   background-color: rgba(0, 0, 0, 0.3) // 背景色（半透明の黒）
   padding: 15px 25px   // 内側の余白
   border-radius: 10px  // 角の丸み
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif // フォントファミリー
+  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif
   font-size: 28px      // フォントサイズ
   font-weight: 300     // フォントの太さ
   text-align: left    // 文字の左寄せ
@@ -29,7 +29,7 @@ style: """
   // 日付部分のスタイル
   .date
     font-size: 18px
-    font-weight: normal
+    font-weight: 200
 """
 
 # a widget can be configured to not render if it has no output

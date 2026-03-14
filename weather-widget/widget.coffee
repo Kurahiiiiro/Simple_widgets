@@ -7,9 +7,9 @@ style: """
   position: fixed;
   bottom: 180px;
   left: 20px;
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 300;
   color: white;
   background: rgba(0,0,0,0.3);
   border-radius: 8px;
@@ -27,20 +27,20 @@ style: """
 
 .city-name {
   font-size: 16pt;
-  font-weight: 400;
+  font-weight: 500;
   text-align: center;
 }
 
 .today {
   font-size: 14pt;
-  font-weight: 200;
+  font-weight: 300;
   text-align: center;
   width: 50%;
 }
 
 .tomorrow {
   font-size: 14pt;
-  font-weight: 200;
+  font-weight: 300;
   text-align: center;
   border-left: 1px solid white;
   width: 50%;
@@ -48,18 +48,18 @@ style: """
 
 .weather-text {
   font-size: 12pt;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 .temp_today {
   font-size: 12pt;
-  font-weight: 100;
+  font-weight: 200;
   text-align: center;
 }
 
 .temp_tomorrow {
   font-size: 12pt;
-  font-weight: 100;
+  font-weight: 200;
   text-align: center;
   border-left: 1px solid white;
 }

@@ -83,7 +83,7 @@ style: """
   h2 {
     margin: 0 0 12px 0;
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 500;
     color: #ffffff;
     text-align: center;
   }
@@ -98,7 +98,7 @@ style: """
     padding: 8px 12px;
     text-align: left;
     border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -111,7 +111,7 @@ style: """
   }
 
   .process-name {
-    font-weight: 200;
+    font-weight: 300;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
